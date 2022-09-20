@@ -1,0 +1,20 @@
+{
+    "token": "",
+    "messageContentCommands": {
+        "prefix": "!",
+        "status": false
+    },
+    "loadSlashGlobal": false,
+    "applicationCommandDirs": [
+        {
+            "Folder": "Info",
+            "cmdName": "info",
+            "CmdDescription": "get information about the bot."
+        },
+        {
+            "dirName": "Admin",
+            "cmdName": "admin",
+            "CmdDescription": "Admin Only Commands."
+        }
+    ]
+}
