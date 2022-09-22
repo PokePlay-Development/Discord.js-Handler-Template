@@ -20,52 +20,35 @@ module.exports = async (client) => {
 										for(option of pull.options) {
 											if(option.type && option.name && option.description) {
 												let type = option.type;
-												let name = option.name.replace(/\s+/g, "_").toLowerCase();
+												let name = option.name;
+												let description = option.description;
 												let required = false;
 												if(option.required && option.required == true) {
-													required = true
-												}
-												if(type == "User") {
-													sub.addUserOption((op) => {
-														op.setName(name).setDescription(option.description).setRequired(required)
-													})
-												}
-												if(type == "Integer") {
-													sub.addIntegerOption((op) => {
-														op.setName(name).setDescription(option.description).setRequired(required)
-													})
+													required = true;
 												}
 												if(type == "String") {
-													sub.addStringOption((op) => {
-														op.setName(name).setDescription(option.description).setRequired(required)
-													})
+													sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
 												}
-												if(type == "Channel") {
-													sub.addChannelOption((op) => {
-														op.setName(name).setDescription(option.description).setRequired(required)
-													})
+												if(type == "User") {
+													sub.addUserOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
 												}
 												if(type == "Role") {
-													sub.addRoleOption((op) => {
-														op.setName(name).setDescription(option.description).setRequired(required)
+													sub.addRoleOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+												}
+												if(type == "Channel") {
+													sub.addChannelOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+												}
+												if(type == "Integer") {
+													sub.addIntegerOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+												}
+												if(type == "StringChoices") {
+													sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+													option.choices.forEach(choice => {
+														sub.addChoices(
+															{ name: `${choice.name}`, value: `${choice.description}`}
+														)
 													})
 												}
-												if(type == "Choices") {
-													if(option.choices && option.choices.length > 0) {
-														sub.addStringOption((op) => {
-															op.setName(name).setDescription(option.description).setRequired(required)
-															option.choices.forEach(choice => {
-																op.addChoices(
-																	{ name: `${choice.name}`, value: `${choice.description}`}
-																)
-															})
-														})
-													}
-												} else {
-													console.log(`[HANDLER]`.bold.red, "Uknown", "InteractionCommandOption".brightRed, "Provided.")
-												}
-											} else {
-												console.log(`Unable To Add option.`)
 											}
 										}
 									}
@@ -82,57 +65,40 @@ module.exports = async (client) => {
 			} else {
 				let pull = require(`../slashCommands/${dir}`)
 				if(pull.name && pull.description) {
-					let sub = new SlashCommandBuilder().setName(String(pull.name).toLowerCase()).setDescription(String(pull.description))
+					let sub = new SlashCommandBuilder().setName(String(pull.name).toLowerCase().replace(/\s+/g, '_')).setDescription(String(pull.description))
 					if(pull.options && pull.options.length > 0) {
 						for(option of pull.options) {
 							if(option.type && option.name && option.description) {
 								let type = option.type;
-								let name = option.name.replace(/\s+/g, "_").toLowerCase();
+								let name = option.name;
+								let description = option.description;
 								let required = false;
 								if(option.required && option.required == true) {
-									required = true
-								}
-								if(type == "User") {
-									sub.addUserOption((op) => {
-										op.setName(name).setDescription(option.description).setRequired(required)
-									})
-								}
-								if(type == "Integer") {
-									sub.addIntegerOption((op) => {
-										op.setName(name).setDescription(option.description).setRequired(required)
-									})
+									required = true;
 								}
 								if(type == "String") {
-									sub.addStringOption((op) => {
-										op.setName(name).setDescription(option.description).setRequired(required)
-									})
+									sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
 								}
-								if(type == "Channel") {
-									sub.addChannelOption((op) => {
-										op.setName(name).setDescription(option.description).setRequired(required)
-									})
+								if(type == "User") {
+									sub.addUserOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
 								}
 								if(type == "Role") {
-									sub.addRoleOption((op) => {
-										op.setName(name).setDescription(option.description).setRequired(required)
+									sub.addRoleOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+								}
+								if(type == "Channel") {
+									sub.addChannelOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+								}
+								if(type == "Integer") {
+									sub.addIntegerOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+								}
+								if(type == "StringChoices") {
+									sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+									option.choices.forEach(choice => {
+										sub.addChoices(
+											{ name: `${choice.name}`, value: `${choice.description}`}
+										)
 									})
 								}
-								if(type == "Choices") {
-									if(option.choices && option.choices.length > 0) {
-										sub.addStringOption((op) => {
-											op.setName(name).setDescription(option.description).setRequired(required)
-											option.choices.forEach(choice => {
-												op.addChoices(
-													{ name: `${choice.name}`, value: `${choice.description}`}
-												)
-											})
-										})
-									}
-								} else {
-									console.log(`[HANDLER]`.bold.red, "Uknown", "InteractionCommandOption".brightRed, "Provided.")
-								}
-							} else {
-								console.log(`Unable To Add option.`)
 							}
 						}
 					}
