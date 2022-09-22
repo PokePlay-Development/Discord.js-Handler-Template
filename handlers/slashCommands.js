@@ -42,12 +42,11 @@ module.exports = async (client) => {
 													sub.addIntegerOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
 												}
 												if(type == "StringChoices") {
-													sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+													let narray = [];
 													option.choices.forEach(choice => {
-														sub.addChoices(
-															{ name: `${choice.name}`, value: `${choice.description}`}
-														)
+														narray.push({ name: `${choice.name}`, value: `${choice.description}`})
 													})
+													sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required).setChoices(narray))
 												}
 											}
 										}
@@ -92,12 +91,11 @@ module.exports = async (client) => {
 									sub.addIntegerOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
 								}
 								if(type == "StringChoices") {
-									sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+									let narray = [];
 									option.choices.forEach(choice => {
-										sub.addChoices(
-											{ name: `${choice.name}`, value: `${choice.description}`}
-										)
+										narray.push({ name: `${choice.name}`, value: `${choice.description}`})
 									})
+									sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required).setChoices(narray))
 								}
 							}
 						}
