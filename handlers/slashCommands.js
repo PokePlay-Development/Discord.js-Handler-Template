@@ -1,86 +1,83 @@
 const { SlashCommandBuilder, REST, Routes } = require("discord.js")
 const config = require("../settings.json")
-const folderConfig = config.slashCommandsDirs;
+const dirSetup = config.slashCommandDirs;
 const { readdirSync, lstatSync } = require("node:fs");
 module.exports = async (client) => {
 	try {
 		let allCommands = new Array();
 		readdirSync(`${process.cwd()}/slashCommands/`).forEach((dir) => {
 			if(lstatSync(`${process.cwd()}/slashCommands/${dir}`).isDirectory()) {
-				let cmdSetup = folderConfig.find(r => r.Folder == dir)
-				if(!cmdSetup) return;
+				let cmdSetup = dirSetup.find(d=>d.folderName == dir);
 				if(cmdSetup) {
-					const subCommand = new SlashCommandBuilder().setName(cmdSetup.CmdName.america.replace(/\s+/g, "_")).setDescription(cmdSetup.CmdDescription);
-					const slashCommands = readdirSync(`./slashCommands/${dir}/`).filter((file) => file.endsWith(".js"));
-					for(let file of slashCommands) {
-						let pull = require(`../slashCommands/${dir}/${file}`);
-						if(pull.name && pull.description) {
-							subCommand.addSubcommand((sub) => {
-								sub.setName(String(pull.name)).setDescription(pull.description)
-								if(pull.options && pull.options.length > 0) {
-									for(option of pull.options) {
-										if(option.type && option.name && option.description) {
-											let type = option.type;
-											let name = option.name.replace(/\s+/g, "_").toLowerCase();
-											let required = false;
-											if(option.required && option.required == true) {
-												required = true
-											}
-											if(type == "User") {
-												sub.addUserOption((op) => {
-													op.setName(name).setDescription(option.description).setRequired(required)
-												})
-											}
-											if(type == "Integer") {
-												sub.addIntegerOption((op) => {
-													op.setName(name).setDescription(option.description).setRequired(required)
-												})
-											}
-											if(type == "String") {
-												sub.addStringOption((op) => {
-													op.setName(name).setDescription(option.description).setRequired(required)
-												})
-											}
-											if(type == "Channel") {
-												sub.addChannelOption((op) => {
-													op.setName(name).setDescription(option.description).setRequired(required)
-												})
-											}
-											if(type == "Role") {
-												sub.addRoleOption((op) => {
-													op.setName(name).setDescription(option.description).setRequired(required)
-												})
-											}
-											if(type == "Choices") {
-												if(option.choices && option.choices.length > 0) {
-													sub.addStringOption((op) => {
+					readdirSync(`${process.cwd()}/slashCommands/${dir}/`).forEach(async file => {
+						if(file.endsWith(".js") && !lstatSync(`${process.cwd()}/slashCommands/${dir}/${file}`).isDirectory()) {
+							let pull = require(`${process.cwd()}/slashCommands/${dir}/${file}`)
+							if(pull.name && pull.description) {
+								let Command = new SlashCommandBuilder().setName(`${cmdSetup.CmdName}`).setDescription(`${cmdSetup.CmdDescription}`);
+								Command.addSubcommand((sub) => {
+									sub.setName(`${pull.name}`).setDescription(`${pull.description}`)
+									if(pull.options && pull.options.length > 0) {
+										for(option of pull.options) {
+											if(option.type && option.name && option.description) {
+												let type = option.type;
+												let name = option.name.replace(/\s+/g, "_").toLowerCase();
+												let required = false;
+												if(option.required && option.required == true) {
+													required = true
+												}
+												if(type == "User") {
+													sub.addUserOption((op) => {
 														op.setName(name).setDescription(option.description).setRequired(required)
-														option.choices.forEach(choice => {
-															op.addChoices(
-																{ name: `${choice.name}`, value: `${choice.description}`}
-															)
-														})
 													})
 												}
+												if(type == "Integer") {
+													sub.addIntegerOption((op) => {
+														op.setName(name).setDescription(option.description).setRequired(required)
+													})
+												}
+												if(type == "String") {
+													sub.addStringOption((op) => {
+														op.setName(name).setDescription(option.description).setRequired(required)
+													})
+												}
+												if(type == "Channel") {
+													sub.addChannelOption((op) => {
+														op.setName(name).setDescription(option.description).setRequired(required)
+													})
+												}
+												if(type == "Role") {
+													sub.addRoleOption((op) => {
+														op.setName(name).setDescription(option.description).setRequired(required)
+													})
+												}
+												if(type == "Choices") {
+													if(option.choices && option.choices.length > 0) {
+														sub.addStringOption((op) => {
+															op.setName(name).setDescription(option.description).setRequired(required)
+															option.choices.forEach(choice => {
+																op.addChoices(
+																	{ name: `${choice.name}`, value: `${choice.description}`}
+																)
+															})
+														})
+													}
+												} else {
+													console.log(`[HANDLER]`.bold.red, "Uknown", "InteractionCommandOption".brightRed, "Provided.")
+												}
 											} else {
-												console.log(`[HANDLER]`.bold.red, "Uknown", "InteractionCommandOption".brightRed, "Provided.")
+												console.log(`Unable To Add option.`)
 											}
-										} else {
-											console.log(`Unable To Add option.`)
 										}
 									}
-								}
-								return subCommand;
-							})
-							client.slashCommands.set(String(cmdSetup.CmdName).replace(/\s+/g, '_').toLowerCase() + pull.name, pull)
-						} else {
-							console.log(file, `error -> missing a help.name, or help.name is not a string.`.brightGreen);
-							continue;
+									return sub;
+								})
+								allCommands.push(Command.toJSON())
+								client.slashCommands.set(String(cmdSetup.CmdName).replace(/\s+/g, '_').toLowerCase() + pull.name, pull)
+							}
 						}
-					}
-					allCommands.push(subCommand.toJSON())
+					})
 				} else {
-					console.log(`Unable TO Find Folder Configuration.`)
+					console.log(`Unable To Find Folder Configuration.`)
 				}
 			} else {
 				let pull = require(`../slashCommands/${dir}`)
