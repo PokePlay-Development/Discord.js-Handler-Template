@@ -4,17 +4,12 @@
         "prefix": "!",
         "status": false
     },
-    "loadSlashGlobal": false,
-    "applicationCommandDirs": [
+    "loadSlashsGlobal": false,
+    "slashCommandDirs": [
         {
-            "Folder": "Info",
-            "cmdName": "info",
-            "CmdDescription": "get information about the bot."
-        },
-        {
-            "dirName": "Admin",
-            "cmdName": "admin",
-            "CmdDescription": "Admin Only Commands."
+            "folderName": "",
+            "commandName": "",
+            "commandDecription": ""
         }
     ]
 }
