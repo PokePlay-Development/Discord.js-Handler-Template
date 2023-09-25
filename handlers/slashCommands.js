@@ -41,12 +41,15 @@ module.exports = async (client) => {
 												if(type == "Integer") {
 													sub.addIntegerOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
 												}
+												if(type == "Attachment") {
+													sub.addAttachmentOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+												}
 												if(type == "StringChoices") {
 													let narray = [];
 													option.choices.forEach(choice => {
-														narray.push({ name: `${choice.name}`, value: `${choice.description}`})
+														narray.push({ name: `${choice.name}`, value: `${choice.value}`})
 													})
-													sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required).setChoices(narray))
+													sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required).addChoices(...narray))
 												}
 											}
 										}
@@ -90,12 +93,11 @@ module.exports = async (client) => {
 								if(type == "Integer") {
 									sub.addIntegerOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
 								}
+								if(type == "Attachment") {
+									sub.addAttachmentOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required))
+								}
 								if(type == "StringChoices") {
-									let narray = [];
-									option.choices.forEach(choice => {
-										narray.push({ name: `${choice.name}`, value: `${choice.description}`})
-									})
-									sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required).setChoices(narray))
+									sub.addStringOption(option => option.setName(String(name).toLowerCase()).setDescription(String(description).toLowerCase()).setRequired(required).addChoices(...option.choices))
 								}
 							}
 						}

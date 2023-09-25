@@ -1,4 +1,4 @@
-# Discord.js Handler Template
+# Discord.js Handler Template V 14.13.0
 
 ***
 

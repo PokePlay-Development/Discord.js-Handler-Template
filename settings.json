@@ -7,9 +7,9 @@
     "loadSlashsGlobal": false,
     "slashCommandDirs": [
         {
-            "folderName": "",
-            "commandName": "",
-            "commandDecription": ""
+            "folderName": "utility",
+            "commandName": "utlity",
+            "commandDecription": "utility commands."
         }
     ]
 }

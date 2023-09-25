@@ -1,8 +1,8 @@
 module.exports = {
-    name: `test`,
-    description: `A Test Command From Discord.jsV14!`,
+    name: `ping`,
+    description: `Get the bot's ping!`,
     options: [
-        { name: `test`, description: `A Test Command From Discord.jsV14!`, type: `String`,required: true },
+        //{ name: `test`, description: `A Test Command From Discord.jsV14!`, type: `String`,required: true },
         //{ name: `test2`, description: `A Test Command From Discord.jsV14!`, type: `User`,required: true },
         //{ name: `test3`, description: `A Test Command From Discord.jsV14!`, type: `Role`,required: true },
         //{ name: `test4`, description: `A Test Command From Discord.jsV14!`, type: `Channel`,required: true },
@@ -11,6 +11,6 @@ module.exports = {
     ],
     run: async (client, interaction) => {
         const { options } = interaction;
-        return interaction.reply({ content: `Discord.jsv14 is here!`})
+        return interaction.reply({ content: `Pong! My Ping is **${client.ws.ping}ms**`})
     }
 }
