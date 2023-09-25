@@ -16,5 +16,5 @@
 
 - The [Rest Events](https://discordjs.guide/additional-info/changes-in-v14.html#rest-events) only work on the RestEvents Folder Now.
 <br/>
-
+- Support Server: [Click Here](https://discord.gg/EmsGKm2Q4X)
 *** 
